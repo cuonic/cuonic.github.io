@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Mazeball</title>
+    
+    <script type="text/javascript" src="js/three.min.js"></script>
+    <script type="text/javascript" src="js/physi.js"></script>
+
+    <script type="text/javascript" src="js/threex.windowresize.js"></script>
+    <script type="text/javascript" src="js/threex.fullscreen.js"></script>
+    
+    <script type="text/javascript">
+    
+    'use strict';
+    
+    Physijs.scripts.worker = 'physijs_worker.js';
+    Physijs.scripts.ammo = 'js/ammo.js';
+    
+    var initScene, render;
+
+    var renderer, scene, camera, light, loader;
+
+    var ground, groundMaterial, groundGeometry;
+    var sphere, sphereMaterial, sphereGeometry;
+    
+    initScene = function() {
+        // Créer le gestionnaire de rendu
+        renderer = new THREE.WebGLRenderer();
+
+        // Definir la taille de la fenêtre de rendu
+        renderer.setSize( window.innerWidth, window.innerHeight );
+
+        // Placer la fenêtre de rendu dans la page
+        document.body.appendChild(renderer.domElement);
+        
+        // Création de la scène
+        scene = new Physijs.Scene;
+
+        // Definir la gravité de la scène
+        scene.setGravity(new THREE.Vector3( 0, -30, 0 ));
+
+        // Refaire la simulation de la scène à chaque mise à jour
+        scene.addEventListener(
+            'update',
+            function() {
+                scene.simulate(undefined, 1);
+            }
+        );
+
+        // Créer la caméra
+        camera = new THREE.PerspectiveCamera(
+            35,
+            window.innerWidth / window.innerHeight,
+            1,
+            1000
+        );
+
+        // Definir la position de la caméra
+        camera.position.set(60, 50, 60);
+
+        // Faire regarder la position de la scène
+        camera.lookAt(scene.position);
+
+        // Ajouter la caméra à la scène
+        scene.add(camera);
+
+        // Gerer le redimensionnement de la fenêtre
+        THREEx.WindowResize(renderer, camera);
+        
+        // Création d'une source de lumière
+        light = new THREE.DirectionalLight(0xFFFFFF);
+
+        // Definir la position de la source de lumière
+        light.position.set(20, 40, -15);
+        light.target.position.copy(scene.position);
+
+        // Ajouter la source de lumière à la scène
+        scene.add(light);
+
+        // Instancier la classe qui charge les textures des objets
+        loader = new THREE.TextureLoader();
+        
+        // Création du materiau du sol
+        groundMaterial = Physijs.createMaterial(
+            new THREE.MeshLambertMaterial({color: "#003399"}),
+            .8, // high friction
+            .4 // low restitution
+        );
+        
+        // Création du materiau de la sphere
+        sphereMaterial = Physijs.createMaterial(
+            new THREE.MeshLambertMaterial({color: "#FFFFFF"}),
+            .4, // low friction
+            .6 // high restitution
+        );
+        
+        // Geometrie du sol
+        groundGeometry = new THREE.BoxGeometry(50, 1, 50);
+
+        // Geometrie de la sphere
+        sphereGeometry = new THREE.SphereGeometry(2, 15, 15);
+
+        // Création du sol
+        ground = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+        
+        ground.__dirtyRotation = true;
+        ground.rotation.set(0, 0, 0);
+        console.log(ground.rotation.x);
+
+        // Ajouter le sol à la scène
+        scene.add(ground);
+            
+        // Création de la sphère
+        sphere = new Physijs.SphereMesh(sphereGeometry, sphereMaterial);
+
+        // Changement de position de la sphere
+        sphere.position.set(0, 15, 0);
+
+        // Ajouter la sphère à la scène
+        scene.add(sphere);
+
+        // Faire le rendu de tout ça
+        requestAnimationFrame( render );
+        scene.simulate();
+
+        document.onkeydown = function(e) {
+            //console.log(e);
+
+            ground.__dirtyRotation = true;
+
+            if(e.which == 70) {
+                // FULLSCREEN
+                if(THREEx.FullScreen.activated()) {
+                    // Plein écran activé, il faut desactiver
+                    THREEx.FullScreen.cancel();
+                } else {
+                    // Plein écran desactivé, il faut activer
+                    THREEx.FullScreen.request();
+                }
+            } else if(e.which == 37) {
+                // LEFT
+                ground.rotation.x = ground.rotation.x - 0.01;
+            } else if(e.which == 38) {
+                // UP
+                ground.rotation.z = ground.rotation.z + 0.01;
+            } else if(e.which == 39) {
+                // RIGHT
+                ground.rotation.x = ground.rotation.x + 0.01;
+            } else if(e.which == 40) {
+                // DOWN
+                ground.rotation.z = ground.rotation.z - 0.01;
+            }
+
+            requestAnimationFrame( render );
+            scene.simulate();
+        };
+    };
+    
+    render = function() {
+        requestAnimationFrame( render );
+        renderer.render( scene, camera );
+    };
+    
+    window.onload = initScene;
+    
+    </script>
+</head>
+
+<body style="margin: 0px; background-color: #bbbbbb;overflow: hidden;">
+    
+</body>
+
+</html>
