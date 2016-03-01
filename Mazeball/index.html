@@ -25,24 +25,49 @@
 
     var ground, groundMaterial, groundGeometry;
     var sphere, sphereMaterial, sphereGeometry;
+    var fallcube, fallcubeMaterial, fallcubeGeometry;
 
     var setGroundRotation, changeGroundRotation, setSpherePosition, toggleFullscreen, resetScene;
     var controller, setupController;
 
     setupController = function() {
-        controller = new Leap.Controller({enableGestures: false});
+        controller = new Leap.Controller({enableGestures: true});
+
+        var firstRoll = null;
+        var firstPitch = null;
+        var frameCounter = 0;
 
         controller.loop(function(frame) {
-            if(frame.hands[0]) {
-                hand = frame.handsMap[0];
+            for (var i in frame.handsMap) {
+                var hand = frame.handsMap[i];
 
-                roll = hand.roll();
-                pitch = hand.pitch();
+                if(firstRoll == null) {
+                    if(frameCounter < 25) {
+                        frameCounter++;
+                        return;
+                    }
+
+                    firstRoll = hand.roll() / 8;
+                    firstPitch = hand.pitch() / 4;
+                    return;
+                }
+
+                var roll = hand.roll() / 2 + firstRoll;
+                var pitch = -(hand.pitch() / 2) + firstPitch;
+                // var pitch = - ( hand.pitch() / 2) +0.06;
 
                 setGroundRotation(roll, 0, pitch);
             }
         });
     }
+
+    /*
+     * Leapmotion
+     * Roll < 0 -> droite
+     * Roll > 0 -> gauche
+     * Pitch < 0 -> bas
+     * Pitch > 0 -> haut
+     */
 
 
     initScene = function() {
@@ -78,7 +103,7 @@
         );
 
         // Definir la position de la caméra
-        camera.position.set(60, 90, 0);
+        camera.position.set(60, 60, 0);
 
         // Faire regarder la position de la scène
         camera.lookAt(scene.position);
@@ -108,6 +133,10 @@
             .8, // high friction
             .4 // low restitution
         );
+
+        fallcubeMaterial = Physijs.createMaterial(
+            new THREE.MeshLambertMaterial({color: "#000000"})
+        );
         
         // Création du materiau de la sphere
         sphereMaterial = Physijs.createMaterial(
@@ -119,20 +148,36 @@
         // Geometrie du sol
         groundGeometry = new THREE.BoxGeometry(50, 1, 50);
 
+        fallcubeGeometry = new THREE.BoxGeometry(500, 1, 500);
+
         // Geometrie de la sphere
         sphereGeometry = new THREE.SphereGeometry(2, 15, 15);
 
         // Création du sol
         ground = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
 
+        //ground.setCcdMotionThreshold(50);
+        //ground.setCcdSweptSphereRadius(0.2);
+
         // Ajouter le sol à la scène
         scene.add(ground);
+
+        fallcube = new Physijs.BoxMesh(fallcubeGeometry, fallcubeMaterial, 0);
+        fallcube.position.set(0, -100, 0);
+
+        scene.add(fallcube);
             
         // Création de la sphère
         sphere = new Physijs.SphereMesh(sphereGeometry, sphereMaterial);
 
         // Changement de position de la sphere
         sphere.position.set(0, 15, 0);
+
+        sphere.addEventListener('collision', function(other_object, relative_velocity, relative_rotation, contact_normal) {
+            if(other_object == fallcube) {
+                resetScene();
+            }
+        });
 
         // Ajouter la sphère à la scène
         scene.add(sphere);
@@ -176,14 +221,6 @@
 
         setupController();
     };
-    
-    /*
-     * Leapmotion
-     * Roll < 0 -> droite
-     * Roll > 0 -> gauche
-     * Pitch < 0 -> bas
-     * Pitch > 0 -> haut
-     */
 
     render = function() {
         requestAnimationFrame(render);
