@@ -157,6 +157,14 @@
         };
     };
     
+    /*
+     * Leapmotion
+     * Roll < 0 -> droite
+     * Roll > 0 -> gauche
+     * Pitch < 0 -> bas
+     * Pitch > 0 -> haut
+     */
+
     render = function() {
         requestAnimationFrame(render);
         renderer.render(scene, camera);
@@ -180,8 +188,6 @@
         // Annuler la velocité de la sphère
         sphere.setLinearVelocity(new THREE.Vector3(0, 0, 0));
         sphere.setAngularVelocity(new THREE.Vector3(0, 0, 0));
-
-        // requestAnimationFrame(render);
     }
 
     setGroundRotation = function(x, y, z) {
@@ -198,8 +204,6 @@
         if(z != null) {
             ground.rotation.z = z;
         }
-
-        // requestAnimationFrame(render);
     }
 
     changeGroundRotation = function(deltaX, deltaZ) {
