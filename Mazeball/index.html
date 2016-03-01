@@ -10,6 +10,7 @@
 
     <script type="text/javascript" src="js/threex.windowresize.js"></script>
     <script type="text/javascript" src="js/threex.fullscreen.js"></script>
+    <script type="text/javascript" src="js/leap.min.js"></script>
     
     <script type="text/javascript">
     
@@ -26,7 +27,24 @@
     var sphere, sphereMaterial, sphereGeometry;
 
     var setGroundRotation, changeGroundRotation, setSpherePosition, toggleFullscreen, resetScene;
-    
+    var controller, setupController;
+
+    setupController = function() {
+        controller = new Leap.Controller({enableGestures: false});
+
+        controller.loop(function(frame) {
+            if(frame.hands[0]) {
+                hand = frame.handsMap[0];
+
+                roll = hand.roll();
+                pitch = hand.pitch();
+
+                setGroundRotation(roll, 0, pitch);
+            }
+        });
+    }
+
+
     initScene = function() {
         // Créer le gestionnaire de rendu
         renderer = new THREE.WebGLRenderer();
@@ -155,6 +173,8 @@
                     changeGroundRotation(0, -0.01);
             } 
         };
+
+        setupController();
     };
     
     /*
