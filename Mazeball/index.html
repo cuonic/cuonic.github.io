@@ -24,6 +24,8 @@
 
     var ground, groundMaterial, groundGeometry;
     var sphere, sphereMaterial, sphereGeometry;
+
+    var setGroundRotation, changeGroundRotation, setSpherePosition, toggleFullscreen, resetScene;
     
     initScene = function() {
         // Créer le gestionnaire de rendu
@@ -58,7 +60,7 @@
         );
 
         // Definir la position de la caméra
-        camera.position.set(60, 50, 60);
+        camera.position.set(60, 90, 0);
 
         // Faire regarder la position de la scène
         camera.lookAt(scene.position);
@@ -104,10 +106,6 @@
 
         // Création du sol
         ground = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
-        
-        ground.__dirtyRotation = true;
-        ground.rotation.set(0, 0, 0);
-        console.log(ground.rotation.x);
 
         // Ajouter le sol à la scène
         scene.add(ground);
@@ -126,42 +124,102 @@
         scene.simulate();
 
         document.onkeydown = function(e) {
-            //console.log(e);
+            switch(e.which) {
+                case 70:
+                    // Touche "f" : Plein écran
+                    toggleFullscreen();
+                    break;
 
-            ground.__dirtyRotation = true;
+                case 82:
+                    // Touche "r" : Reset
+                    resetScene();
+                    break;
 
-            if(e.which == 70) {
-                // FULLSCREEN
-                if(THREEx.FullScreen.activated()) {
-                    // Plein écran activé, il faut desactiver
-                    THREEx.FullScreen.cancel();
-                } else {
-                    // Plein écran desactivé, il faut activer
-                    THREEx.FullScreen.request();
-                }
-            } else if(e.which == 37) {
-                // LEFT
-                ground.rotation.x = ground.rotation.x - 0.01;
-            } else if(e.which == 38) {
-                // UP
-                ground.rotation.z = ground.rotation.z + 0.01;
-            } else if(e.which == 39) {
-                // RIGHT
-                ground.rotation.x = ground.rotation.x + 0.01;
-            } else if(e.which == 40) {
-                // DOWN
-                ground.rotation.z = ground.rotation.z - 0.01;
-            }
+                case 37:
+                    // Fleche gauche
+                    changeGroundRotation(-0.01, 0);
+                    break;
 
-            requestAnimationFrame( render );
-            scene.simulate();
+                case 38:
+                    // Fleche haut
+                    changeGroundRotation(0, 0.01);
+                    break;
+
+                case 39:
+                    // Fleche droit
+                    changeGroundRotation(0.01, 0);
+                    break;
+
+                case 40:
+                    // Fleche bas
+                    changeGroundRotation(0, -0.01);
+            } 
         };
     };
     
     render = function() {
-        requestAnimationFrame( render );
-        renderer.render( scene, camera );
+        requestAnimationFrame(render);
+        renderer.render(scene, camera);
     };
+
+    setSpherePosition = function(x, y, z) {
+        sphere.__dirtyPosition = true
+
+        if(x != null) {
+            sphere.position.x = x;
+        }
+
+        if(y != null) {
+            sphere.position.y = y;
+        }
+
+        if(z != null) {
+            sphere.position.z = z;
+        }
+
+        // Annuler la velocité de la sphère
+        sphere.setLinearVelocity(new THREE.Vector3(0, 0, 0));
+        sphere.setAngularVelocity(new THREE.Vector3(0, 0, 0));
+
+        // requestAnimationFrame(render);
+    }
+
+    setGroundRotation = function(x, y, z) {
+        ground.__dirtyRotation = true;
+
+        if(x != null) {
+            ground.rotation.x = x;
+        }
+
+        if(y != null) {
+            ground.rotation.y = y;
+        }
+
+        if(z != null) {
+            ground.rotation.z = z;
+        }
+
+        // requestAnimationFrame(render);
+    }
+
+    changeGroundRotation = function(deltaX, deltaZ) {
+        setGroundRotation(ground.rotation.x + deltaX, null, ground.rotation.z + deltaZ);
+    }
+
+    resetScene = function() {
+        setGroundRotation(0, 0, 0);
+        setSpherePosition(0, 15, 0);
+    }
+
+    toggleFullscreen = function() {
+        if(THREEx.FullScreen.activated()) {
+            // Plein écran activé, il faut desactiver
+            THREEx.FullScreen.cancel();
+        } else {
+            // Plein écran desactivé, il faut activer
+            THREEx.FullScreen.request();
+        }
+    }
     
     window.onload = initScene;
     
