@@ -4,6 +4,8 @@
     <head>
         <title>Mazeball</title>
         
+        <link href="css/style.css" rel="stylesheet">
+
         <script type="text/javascript" src="js/three.min.js"></script>
         <script type="text/javascript" src="js/physi.js"></script>
 
@@ -15,15 +17,15 @@
         
         
     </head>
-    <body style="margin: 0px; background-color: #bbbbbb;overflow: hidden;">
-        <div id="lives" style="position: absolute; top: 10px; right: 10px;">
+    <body>
+        <div id="lives">
             <img id="life1" src="images/heart.png">
             <img id="life2" src="images/heart.png">
             <img id="life3" src="images/heart.png">
         </div>
 
-        <div id="gameOverOverlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; background-color: rgba(0, 0, 0, 0.8); visibility: hidden;">
-            <h1 style="color: #FF0000; text-align: center; margin-top: 45%; font-size: 80px;">Game over</h1>
+        <div id="gameOverOverlay">
+            <h1>Game over</h1>
         </div>
 
         <script type="text/javascript" src="js/mazeball.js"></script>
