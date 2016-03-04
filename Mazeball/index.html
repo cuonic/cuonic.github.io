@@ -1,294 +1,31 @@
 <!DOCTYPE html>
 
 <html>
-
-<head>
-    <title>Mazeball</title>
-    
-    <script type="text/javascript" src="js/three.min.js"></script>
-    <script type="text/javascript" src="js/physi.js"></script>
-
-    <script type="text/javascript" src="js/threex.windowresize.js"></script>
-    <script type="text/javascript" src="js/threex.fullscreen.js"></script>
-    <script type="text/javascript" src="js/leap.min.js"></script>
-    
-    <script type="text/javascript">
-    
-    'use strict';
-    
-    Physijs.scripts.worker = 'physijs_worker.js';
-    Physijs.scripts.ammo = 'js/ammo.js';
-    
-    var initScene, render;
-
-    var renderer, scene, camera, light, loader;
-
-    var ground, groundMaterial, groundGeometry;
-    var sphere, sphereMaterial, sphereGeometry;
-    var fallcube, fallcubeMaterial, fallcubeGeometry;
-
-    var setGroundRotation, changeGroundRotation, setSpherePosition, toggleFullscreen, resetScene;
-    var controller, setupController;
-
-    setupController = function() {
-        controller = new Leap.Controller({enableGestures: true});
-
-        var firstRoll = null;
-        var firstPitch = null;
-        var frameCounter = 0;
-
-        controller.loop(function(frame) {
-            for (var i in frame.handsMap) {
-                var hand = frame.handsMap[i];
-
-                if(firstRoll == null) {
-                    if(frameCounter < 25) {
-                        frameCounter++;
-                        return;
-                    }
-
-                    firstRoll = hand.roll() / 8;
-                    firstPitch = hand.pitch() / 4;
-                    return;
-                }
-
-                var roll = hand.roll() / 2 + firstRoll;
-                var pitch = -(hand.pitch() / 2) + firstPitch;
-                // var pitch = - ( hand.pitch() / 2) +0.06;
-
-                setGroundRotation(roll, 0, pitch);
-            }
-        });
-    }
-
-    /*
-     * Leapmotion
-     * Roll < 0 -> droite
-     * Roll > 0 -> gauche
-     * Pitch < 0 -> bas
-     * Pitch > 0 -> haut
-     */
-
-
-    initScene = function() {
-        // Créer le gestionnaire de rendu
-        renderer = new THREE.WebGLRenderer();
-
-        // Definir la taille de la fenêtre de rendu
-        renderer.setSize( window.innerWidth, window.innerHeight );
-
-        // Placer la fenêtre de rendu dans la page
-        document.body.appendChild(renderer.domElement);
+    <head>
+        <title>Mazeball</title>
         
-        // Création de la scène
-        scene = new Physijs.Scene;
+        <script type="text/javascript" src="js/three.min.js"></script>
+        <script type="text/javascript" src="js/physi.js"></script>
 
-        // Definir la gravité de la scène
-        scene.setGravity(new THREE.Vector3( 0, -30, 0 ));
-
-        // Refaire la simulation de la scène à chaque mise à jour
-        scene.addEventListener(
-            'update',
-            function() {
-                scene.simulate(undefined, 1);
-            }
-        );
-
-        // Créer la caméra
-        camera = new THREE.PerspectiveCamera(
-            35,
-            window.innerWidth / window.innerHeight,
-            1,
-            1000
-        );
-
-        // Definir la position de la caméra
-        camera.position.set(60, 60, 0);
-
-        // Faire regarder la position de la scène
-        camera.lookAt(scene.position);
-
-        // Ajouter la caméra à la scène
-        scene.add(camera);
-
-        // Gerer le redimensionnement de la fenêtre
-        THREEx.WindowResize(renderer, camera);
+        <script type="text/javascript" src="js/threex.windowresize.js"></script>
+        <script type="text/javascript" src="js/threex.fullscreen.js"></script>
+        <script type="text/javascript" src="js/leap.min.js"></script>
         
-        // Création d'une source de lumière
-        light = new THREE.DirectionalLight(0xFFFFFF);
-
-        // Definir la position de la source de lumière
-        light.position.set(20, 40, -15);
-        light.target.position.copy(scene.position);
-
-        // Ajouter la source de lumière à la scène
-        scene.add(light);
-
-        // Instancier la classe qui charge les textures des objets
-        loader = new THREE.TextureLoader();
+        <!-- game's code -->
         
-        // Création du materiau du sol
-        groundMaterial = Physijs.createMaterial(
-            new THREE.MeshLambertMaterial({color: "#003399"}),
-            .8, // high friction
-            .4 // low restitution
-        );
-
-        fallcubeMaterial = Physijs.createMaterial(
-            new THREE.MeshLambertMaterial({color: "#000000"})
-        );
         
-        // Création du materiau de la sphere
-        sphereMaterial = Physijs.createMaterial(
-            new THREE.MeshLambertMaterial({color: "#FFFFFF"}),
-            .4, // low friction
-            .6 // high restitution
-        );
-        
-        // Geometrie du sol
-        groundGeometry = new THREE.BoxGeometry(50, 1, 50);
+    </head>
+    <body style="margin: 0px; background-color: #bbbbbb;overflow: hidden;">
+        <div id="lives" style="position: absolute; top: 10px; right: 10px;">
+            <img id="life1" src="images/heart.png">
+            <img id="life2" src="images/heart.png">
+            <img id="life3" src="images/heart.png">
+        </div>
 
-        fallcubeGeometry = new THREE.BoxGeometry(500, 1, 500);
+        <div id="gameOverOverlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; background-color: rgba(0, 0, 0, 0.8); visibility: hidden;">
+            <h1 style="color: #FF0000; text-align: center; margin-top: 45%; font-size: 80px;">Game over</h1>
+        </div>
 
-        // Geometrie de la sphere
-        sphereGeometry = new THREE.SphereGeometry(2, 15, 15);
-
-        // Création du sol
-        ground = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
-
-        //ground.setCcdMotionThreshold(50);
-        //ground.setCcdSweptSphereRadius(0.2);
-
-        // Ajouter le sol à la scène
-        scene.add(ground);
-
-        fallcube = new Physijs.BoxMesh(fallcubeGeometry, fallcubeMaterial, 0);
-        fallcube.position.set(0, -100, 0);
-
-        scene.add(fallcube);
-            
-        // Création de la sphère
-        sphere = new Physijs.SphereMesh(sphereGeometry, sphereMaterial);
-
-        // Changement de position de la sphere
-        sphere.position.set(0, 15, 0);
-
-        sphere.addEventListener('collision', function(other_object, relative_velocity, relative_rotation, contact_normal) {
-            if(other_object == fallcube) {
-                resetScene();
-            }
-        });
-
-        // Ajouter la sphère à la scène
-        scene.add(sphere);
-
-        // Faire le rendu de tout ça
-        requestAnimationFrame( render );
-        scene.simulate();
-
-        document.onkeydown = function(e) {
-            switch(e.which) {
-                case 70:
-                    // Touche "f" : Plein écran
-                    toggleFullscreen();
-                    break;
-
-                case 82:
-                    // Touche "r" : Reset
-                    resetScene();
-                    break;
-
-                case 37:
-                    // Fleche gauche
-                    changeGroundRotation(-0.01, 0);
-                    break;
-
-                case 38:
-                    // Fleche haut
-                    changeGroundRotation(0, 0.01);
-                    break;
-
-                case 39:
-                    // Fleche droit
-                    changeGroundRotation(0.01, 0);
-                    break;
-
-                case 40:
-                    // Fleche bas
-                    changeGroundRotation(0, -0.01);
-            } 
-        };
-
-        setupController();
-    };
-
-    render = function() {
-        requestAnimationFrame(render);
-        renderer.render(scene, camera);
-    };
-
-    setSpherePosition = function(x, y, z) {
-        sphere.__dirtyPosition = true
-
-        if(x != null) {
-            sphere.position.x = x;
-        }
-
-        if(y != null) {
-            sphere.position.y = y;
-        }
-
-        if(z != null) {
-            sphere.position.z = z;
-        }
-
-        // Annuler la velocité de la sphère
-        sphere.setLinearVelocity(new THREE.Vector3(0, 0, 0));
-        sphere.setAngularVelocity(new THREE.Vector3(0, 0, 0));
-    }
-
-    setGroundRotation = function(x, y, z) {
-        ground.__dirtyRotation = true;
-
-        if(x != null) {
-            ground.rotation.x = x;
-        }
-
-        if(y != null) {
-            ground.rotation.y = y;
-        }
-
-        if(z != null) {
-            ground.rotation.z = z;
-        }
-    }
-
-    changeGroundRotation = function(deltaX, deltaZ) {
-        setGroundRotation(ground.rotation.x + deltaX, null, ground.rotation.z + deltaZ);
-    }
-
-    resetScene = function() {
-        setGroundRotation(0, 0, 0);
-        setSpherePosition(0, 15, 0);
-    }
-
-    toggleFullscreen = function() {
-        if(THREEx.FullScreen.activated()) {
-            // Plein écran activé, il faut desactiver
-            THREEx.FullScreen.cancel();
-        } else {
-            // Plein écran desactivé, il faut activer
-            THREEx.FullScreen.request();
-        }
-    }
-    
-    window.onload = initScene;
-    
-    </script>
-</head>
-
-<body style="margin: 0px; background-color: #bbbbbb;overflow: hidden;">
-    
-</body>
-
+        <script type="text/javascript" src="js/mazeball.js"></script>
+    </body>
 </html>
