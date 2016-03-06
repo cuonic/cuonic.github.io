@@ -76,7 +76,7 @@ function initScene()
         {
             case 70:
                 // Touche "f" : Plein écran
-                toggleFullscreen();
+                toggleFullScreen();
                 break;
 
             case 82:
@@ -187,7 +187,7 @@ function createSphereMaterial()
 function createGeometries()
 {
     // Geometrie du sol
-    groundGeometry = new THREE.BoxGeometry(50, 1, 50);
+    groundGeometry = new THREE.BoxGeometry(5, 1, 5);
 
     fallcubeGeometry = new THREE.BoxGeometry(500, 1, 500);
 
@@ -199,7 +199,243 @@ function createGround()
 {
     // Création du sol
     ground = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
-
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = 5;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = 10;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = 15;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = 10;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = 15;
+	groundPiece.position.z = 5;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = 15;
+	groundPiece.position.z = 10;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = 10;
+	groundPiece.position.z = 10;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = 5;
+	groundPiece.position.z = 10;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = 0;
+	groundPiece.position.z = 10;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = -5;
+	groundPiece.position.z = 10;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = -5;
+	groundPiece.position.z = 15;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = -10;
+	groundPiece.position.z = 15;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = -15;
+	groundPiece.position.z = 15;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = -15;
+	groundPiece.position.z = 10;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = -15;
+	groundPiece.position.z = 5;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = -15;
+	groundPiece.position.z = 0;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = -15;
+	groundPiece.position.z = -5;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = -15;
+	groundPiece.position.z = -10;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = -15;
+	groundPiece.position.z = -15;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = -10;
+	groundPiece.position.z = -15;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = -5;
+	groundPiece.position.z = -15;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = 0;
+	groundPiece.position.z = -15;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = 5;
+	groundPiece.position.z = -15;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = 5;
+	groundPiece.position.z = -10;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = 10;
+	groundPiece.position.z = -10;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = 10;
+	groundPiece.position.z = -10;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = 15;
+	groundPiece.position.z = -10;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = 20;
+	groundPiece.position.z = -10;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = 25;
+	groundPiece.position.z = -10;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = 25;
+	groundPiece.position.z = -5;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = 25;
+	groundPiece.position.z = 0;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = 25;
+	groundPiece.position.z = 5;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = 25;
+	groundPiece.position.z = 10;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = 25;
+	groundPiece.position.z = 15;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = 25;
+	groundPiece.position.z = 20;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = 25;
+	groundPiece.position.z = 25;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = 20;
+	groundPiece.position.z = 25;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = 15;
+	groundPiece.position.z = 25;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = 15;
+	groundPiece.position.z = 20;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = 10;
+	groundPiece.position.z = 20;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = 5;
+	groundPiece.position.z = 20;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = 5;
+	groundPiece.position.z = 25;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = 0;
+	groundPiece.position.z = 25;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = -5;
+	groundPiece.position.z = 25;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
+	groundPiece.position.x = -10;
+	groundPiece.position.z = 25;
+	ground.add(groundPiece);
+	
+	var groundPiece = new Physijs.BoxMesh(groundGeometry, new THREE.MeshLambertMaterial({color: "#ff9933"}), 0);
+	groundPiece.position.x = -15;
+	groundPiece.position.z = 25;
+	ground.add(groundPiece);
+	
+	groundPiece.addEventListener('collision', function(other_object, relative_velocity, relative_rotation, contact_normal) {
+        console.log(other_object)
+		
+		if(other_object == sphere)
+        {
+            youWinOverlay();
+        }
+    });
+	
+	
     // Ajouter le sol à la scène
     scene.add(ground);
 
@@ -218,7 +454,9 @@ function createSphere()
     sphere.position.set(0, 15, 0);
 
     sphere.addEventListener('collision', function(other_object, relative_velocity, relative_rotation, contact_normal) {
-        if(other_object == fallcube)
+        // console.log(other_object)
+		
+		if(other_object == fallcube)
         {
             playerFell();
         }
@@ -281,7 +519,9 @@ function setGroundRotation(x, y, z)
 
     if(x != null)
     {
-        ground.rotation.x = x;
+		if(x < 0.2 && x > -0.2) {
+			ground.rotation.x = x;
+		}
     }
 
     if(y != null)
@@ -291,7 +531,9 @@ function setGroundRotation(x, y, z)
 
     if(z != null)
     {
-        ground.rotation.z = z;
+		if(z < 0.2 && z > -0.2) {
+			ground.rotation.z = z;
+		}
     }
 }
 

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 
 <html>
     <head>
@@ -19,14 +19,47 @@
     </head>
     <body>
         <div id="lives">
+			<img id="life3" src="images/heart.png">
+			<img id="life2" src="images/heart.png">
             <img id="life1" src="images/heart.png">
-            <img id="life2" src="images/heart.png">
-            <img id="life3" src="images/heart.png">
         </div>
-
+		
+		<div id="info">
+			<h1>Mazeball</h1>
+		
+			<h2>Comment jouer ?</h2>
+			
+			<p>
+				Utilisez les fl&egrave;ches du clavier ou posez une main 
+				&agrave; 30 cm au dessus du LeapMotion, et penchez la 
+				pour faire pivoter le plateau de jeu.
+			</p>
+				
+			<p>
+				Chaque joueur dispose de trois vies, si vous faites tomber
+				la boule du plateau vous perdez une vie.
+			</p>
+			
+			<h2>Commandes</h2>
+			
+			<ul>
+				<li>f: Plein &eacute;cran</li>
+				<li>r: Redemarrer</li>
+			</ul>
+			
+			<h2>Le code</h2>
+			
+			<p>
+				Ce jeu est &eacute;crit en Javascript (Three.js et
+				Physi.js), HTML et CSS.
+			</p>
+		</div>
+		
         <div id="gameOverOverlay">
             <h1>Game over</h1>
+			<h2>Appuyez sur la touche 'r' pour recommencer</h2>
         </div>
+		
 
         <script type="text/javascript" src="js/mazeball.js"></script>
     </body>
