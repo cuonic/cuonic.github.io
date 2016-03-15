@@ -15,6 +15,14 @@ var frameCounter = 0;
 // variable pour le nombre de vies
 var lives = 3;
 
+// Coefficient de la taille des elements du jeu
+var sizeCoefficient = 4;
+
+var finalGroundPieceAbsoluteBoundingBoxMax;
+var finalGroundPieceAbsoluteBoundingBoxMin;
+
+var winner = false;
+
 
 /**
  * Initialise la scène
@@ -108,6 +116,11 @@ function createScene()
         'update',
         function()
         {
+            if( sphere.position.x > finalGroundPieceAbsoluteBoundingBoxMin.x && sphere.position.x < finalGroundPieceAbsoluteBoundingBoxMax.x && sphere.position.z > finalGroundPieceAbsoluteBoundingBoxMin.z && sphere.position.z < finalGroundPieceAbsoluteBoundingBoxMax.z)
+            {
+                showYouWin();
+            }
+
             scene.simulate(undefined, 1);
         }
     );
@@ -188,116 +201,124 @@ function createGround()
     );
 	
 	// Geometrie du sol
-    var groundGeometry = new THREE.BoxGeometry(5, 1, 5);
+    var groundGeometry = new THREE.BoxGeometry(sizeCoefficient, 1, sizeCoefficient);
 	
 	// Création du sol
 	ground = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
 	
 	// Creation de la geometrie des cases fines
-	var thinGroundPieceGeometry = new THREE.BoxGeometry(1, 1, 5);
-	
-	// Creation de la geometrie de la case rotative
-	var spinningGroundPieceGeometry = new THREE.CylinderGeometry( 5, 5, 1, 32 );
+	var thinGroundPieceGeometry = new THREE.BoxGeometry(sizeCoefficient / 4, 1, sizeCoefficient);
 	
 	// Création du materiau de la case gagnante
 	var finalGroundPieceMaterial = new THREE.MeshLambertMaterial({color: "#ff9933"});
-	
+
 	var groundPiece;
 	var groundPiecePositions = [
+		[1, 0 , 0],
+        [2, 0 , 0],
+        [3, 0 , 0],
+        [3, 0 , 1],
+        [3, 0 , 2],
+        [2, 0 , 2],
+        [1, 0 , 2],
+        [0, 0 , 2],
+        [-1, 0 , 2],
+        [-2, 0 , 2],
+        [-2, 0 , 1],
+        [-2, 0 , 0],
+        [-2, 0 , -1],
+        [-2, 0 , -2],
+        [-1, 0 , -2],
+        [0, 0 , -2],
+        [1, 0 , -2],
+        [2, 0 , -2],
+        [3, 0 , -2],
+        [4, 0 , -2],
+        [5, 0 , -2],
+		[5, 0, -1],
 		[5, 0, 0],
-		[10, 0, 0],
-		[15, 0, 0],
-		[15, 0, 5],
-		[15, 0, 10],
-		[10, 0, 10],
-		[5, 0, 10],
-		[0, 0, 10],
-		[-5, 0, 10],
-		[-10, 0, 10],
-		[-10, 0, 5],
-		[-10, 0, 0],
-		[-10, 0, -5],
-		[-10, 0, -10],
-		[-5, 0, -10],
-		[0, 0, -10],
-		[5, 0, -10],
-		[10, 0, -10],
-		[15, 0, -10],
-		[20, 0, -10],
-		[25, 0, -10],
-		[25, 0, -5],
-		[25, 0, 0],
-		[25, 0, 5],
-		[25, 0, 10],
-		[25, 0, 15],
-		[25, 0, 20],
-		[25, 0, 25],
-		[25, 0, 30],
-		[20, 0, 30],
-		[15, 0, 30],
-		[15, 0, 25],
-		[15, 0, 20],
-		[10, 0, 20],
-		[5, 0, 20],
-		[5, 0, 25],
-		[5, 0, 30],
-		[0, 0, 30],
-		[-5, 0, 30],
-		[-5, 0, 25],
-		[-5, 0, 20],
-		[-10, 0, 20],
-		[-15, 0, 20],
-		[-20, 0, 20],
-		[-20, 0, -20],
-		[-15, 0, -20],
-		[-10, 0, -20],
-		[-5, 0, -20],
-		[-5, 0, -25],
-		[-5, 0, -30],
-		[0, 0, -30],
-		[5, 0, -30],
-		[10, 0, -30],
-		[15, 0, -30],
-		[20, 0, -30],
-		[25, 0, -30],
-		[25, 0, -25],
-		[25, 0, -20],
-		[20, 0, -20],
-		[15, 0, -20],
-		[10, 0, -20]
+		[5, 0, 1],
+		[5, 0, 2],
+		[5, 0, 3],
+		[5, 0, 4],
+		[5, 0, 5],
+		[5, 0, 6],
+		[4, 0, 6],
+		[3, 0, 6],
+		[3, 0, 5],
+		[3, 0, 4],
+		[2, 0, 4],
+		[1, 0, 4],
+		[1, 0, 5],
+		[1, 0, 6],
+		[0, 0, 6],
+		[-1, 0, 6],
+		[-1, 0, 5],
+		[-1, 0, 4],
+		[-2, 0, 4],
+		[-3, 0, 4],
+		[-4, 0, 4],
+		[-4, 0, -4],
+		[-3, 0, -4],
+		[-2, 0, -4],
+		[-1, 0, -4],
+		[-1, 0, -5],
+		[-1, 0, -6],
+		[0, 0, -6],
+		[1, 0, -6],
+		[2, 0, -6],
+		[3, 0, -6],
+		[4, 0, -6],
+		[5, 0, -6],
+		[5, 0, -5],
+		[5, 0, -4],
+		[4, 0, -4],
+		[3, 0, -4],
+		[2, 0, -4],
+        [1, 0, -1],
+        [1, 0, -3]
 	];
 	
 	var thinGroundPiecePositions = [
-		[-20, 0, 15],
-		[-20, 0, 10],
-		[-20, 0, 5],
-		[-20, 0, 0],
-		[-20, 0, -5],
-		[-20, 0, -10],
-		[-20, 0, -15]
+		[-4, 0, 3],
+		[-4, 0, 2],
+		[-4, 0, 1],
+		[-4, 0, 0],
+		[-4, 0, -1],
+		[-4, 0, -2],
+		[-4, 0, -3]
 	];
 	
-	var finalGroundPiecePosition = [5, 0, -20];
+	var finalGroundPiecePosition = [1, 0, -4];
 	
 	// Créer les cases du plateau et les ajouter au plateau
 	groundPiecePositions.forEach(function(entry) {
 		groundPiece = new Physijs.BoxMesh(groundGeometry, groundMaterial, 0);
-		groundPiece.position.set(entry[0], entry[1], entry[2]);	
+		groundPiece.position.set(entry[0] * sizeCoefficient, entry[1] * sizeCoefficient, entry[2] * sizeCoefficient);	
 		ground.add(groundPiece);
 	});
 	
 	// Créer les cases fines du plateau et les ajouter au plateau
 	thinGroundPiecePositions.forEach(function(entry) {
 		groundPiece = new Physijs.BoxMesh(thinGroundPieceGeometry, groundMaterial, 0);
-		groundPiece.position.set(entry[0], entry[1], entry[2]);
+		groundPiece.position.set(entry[0] * sizeCoefficient, entry[1] * sizeCoefficient, entry[2] * sizeCoefficient);
+
 		ground.add(groundPiece);
 	});
 	
 	// Créer la case finale du plateau et l'ajouter au plateau
 	finalGroundPiece = new Physijs.BoxMesh(groundGeometry, finalGroundPieceMaterial, 0);
-	finalGroundPiece.position.set(finalGroundPiecePosition[0], finalGroundPiecePosition[1], finalGroundPiecePosition[2]);
+	finalGroundPiece.position.set(finalGroundPiecePosition[0] * sizeCoefficient, finalGroundPiecePosition[1] * sizeCoefficient, finalGroundPiecePosition[2] * sizeCoefficient);
 	ground.add(finalGroundPiece);
-	
+
+    var finalGroundPieceBoundingBox = groundGeometry.boundingBox;
+
+    finalGroundPieceAbsoluteBoundingBoxMax = new THREE.Vector3(0, 0, 0);
+    finalGroundPieceAbsoluteBoundingBoxMax.addVectors(finalGroundPiece.position, finalGroundPieceBoundingBox.max);
+
+    finalGroundPieceAbsoluteBoundingBoxMin = new THREE.Vector3(0, 0, 0);
+    finalGroundPieceAbsoluteBoundingBoxMin.addVectors(finalGroundPiece.position, finalGroundPieceBoundingBox.min);
+
 	// Ajouter le plateau à la scène
 	scene.add(ground);
 }
@@ -376,8 +397,18 @@ function toggleFullScreen()
  */
 function showGameOver()
 {
-    document.getElementById("gameOverOverlay").style.visibility = 'visible';
+    if( !winner )
+        document.getElementById("gameOverOverlay").style.visibility = 'visible';
 }
+
+/**
+ * Affiche la couche "You win"
+ */
+ function showYouWin()
+ {
+    winner = true;
+    document.getElementById("youWinOverlay").style.visibility = 'visible';
+ }
 
 /**
  * Cache la couche "Game over"
@@ -386,6 +417,15 @@ function hideGameOver()
 {
     document.getElementById("gameOverOverlay").style.visibility = 'hidden';
 }
+
+/**
+ * Cache la couche "You win"
+ */
+ function hideYouWin()
+ {
+    winner = false;
+    document.getElementById("youWinOverlay").style.visibility = 'hidden';
+ }
 
 /**
  * Appellée lorsque la sphère tombe du plateau
